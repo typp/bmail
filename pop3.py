@@ -15,7 +15,9 @@ class MailboxPOP3:
 
         def list (self):
                 print("LIST...")
-                print(self.connector.list())
+                mails = self.connector.list()
+                print(mails)
+                print(self.connector.retr(1))
 
 if __name__ == '__main__':
         M = MailboxPOP3(sys.argv[1], int(sys.argv[2]))
