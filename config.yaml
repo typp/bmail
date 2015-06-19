@@ -1,0 +1,12 @@
+MonCompte:
+ mode: imap
+ host: imap.gmail.com
+ port: 0
+ ssl: False
+ folder: INBOX
+MonAutreCompte:
+ mode: pop3
+ host: pop3.gmail.com
+ port: 0
+ ssl: False
+ folder: INBOX

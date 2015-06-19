@@ -1,0 +1,9 @@
+*.tmp
+*.swp
+*.swo
+*.swn
+*.swm
+*~
+\#*\#
+.\#*
+.vimrc
