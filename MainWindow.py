@@ -137,5 +137,6 @@ class MainWindow (QMainWindow):
             self.currentProfileAction.setFont(font)
             self.currentProfile = profile
 
-    def showMail (self, item, mailno):
-        print('bite')
+    def showMail (self, mailno, item):
+        content = self.mailbox.get(mailno)
+        self.webView.setHtml(content)
