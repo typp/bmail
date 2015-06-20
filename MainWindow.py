@@ -18,6 +18,7 @@ from functools import partial
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QListWidgetItem
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 from PyQt5 import uic
 from PyQt5 import QtGui
@@ -140,8 +141,9 @@ class MainWindow (QMainWindow):
                 self.mailList.takeItem(0)
             for message in self.mailbox.list():
                 item = QListWidgetItem(message['header']['Subject'])
+                item.setData(Qt.UserRole, message['id']);
                 self.mailList.addItem(item)
-                self.mailList.itemClicked.connect(partial(self.showMail, message['id']))
+            self.mailList.itemClicked.connect(self.showMail)
             if self.currentProfileAction:
                 font = QtGui.QFont()
                 font.setBold(False)
@@ -152,6 +154,7 @@ class MainWindow (QMainWindow):
             self.currentProfileAction.setFont(font)
             self.currentProfile = profile
 
-    def showMail (self, mailno, item):
+    def showMail (self, item):
+        mailno = item.data(Qt.UserRole)
         content = self.mailbox.get(mailno)
         self.webView.setHtml(content)

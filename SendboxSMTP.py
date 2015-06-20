@@ -29,19 +29,19 @@ class MLStripper(HTMLParser):
 class SendboxSMTP:
     connector = None
 
-    def __init__(self, config):
-        self.config = config
-        smtp = smtplib.SMTP_SSL if config['ssl'] else smtplib.SMTP
-        self.connector = smtp(config['host'], config['port'])
-        if config['auth']:
-            if config['tls']:
+    def __init__(self, profile):
+        self.config = profile['config']['sender']
+        smtp = smtplib.SMTP_SSL if self.config['ssl'] else smtplib.SMTP
+        self.connector = smtp(self.config['host'], self.config['port'])
+        if self.config['auth']:
+            if self.config['tls']:
                 try:
                     self.connector.ehlo()
                     self.connector.starttls()
                     self.connector.ehlo()
                 except smtplib.SMTPException:
                     pass
-            self.connector.login(config['username'], config['password'])
+            self.connector.login(self.config['username'], self.config['password'])
 
     def __del__(self):
         if self.connector:
@@ -53,7 +53,7 @@ class SendboxSMTP:
     def send(self, to, subject, html):
         mail = MIMEMultipart('alternative')
         mail['Subject'] = subject
-        mail['From'] = config['email']
+        mail['From'] = self.config['email']
         mail['To'] = to
 
         stripper = MLStripper()
