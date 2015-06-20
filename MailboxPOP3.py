@@ -51,13 +51,12 @@ class MailboxPOP3:
             path = os.path.join(self.storageDir, filename)
             with open(path, 'w') as stream:
                 stream.write(content)
-            self.mails.append({'id': mailno, 'content': mail[1]})
-        print('fesse')
+            self.mails.append({'id': mailno, 'content': content})
 
     def list (self):
         res = []
         for mail in self.mails:
-            header = EmailParser().parsestr(''.join(x.decode('utf-8') for x in mail['content']))
+            header = EmailParser().parsestr(mail['content'])
             res.append({'id': mail['id'], 'header': header})
         return res
 

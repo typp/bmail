@@ -60,7 +60,7 @@ class MainWindow (QMainWindow):
         dialog = Dialog_NewMail(self)
         dialog.exec()
 
-    def appendProfile (self, name, entry_value):
+    def appendProfile (self, profile, filename):
         self.action_No_profile_known.setVisible(False)
         action = QtWidgets.QAction(self)
         action.setText(profile['name'])
@@ -120,12 +120,11 @@ class MainWindow (QMainWindow):
                 self.mailbox = MailboxPOP3(profile)
             else:
                 return
-            print('couille')
             self.mailbox.sync()
             while self.mailList.count() > 0:
                 self.mailList.takeItem(0)
             for message in self.mailbox.list():
-                item = QListWidgetItem(message['header']['subject'])
+                item = QListWidgetItem(message['header']['Subject'])
                 self.mailList.addItem(item)
                 self.mailList.itemClicked.connect(partial(self.showMail, message['id']))
             if self.currentProfileAction:
