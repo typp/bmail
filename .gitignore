@@ -9,3 +9,4 @@
 .vimrc
 *.pyc
 profile/*.yaml
+__pycache__

@@ -22,6 +22,7 @@ from Dialog_NewProfile import *
 from Dialog_NewMail import *
 
 from MailboxPOP3 import *
+from MailboxIMAP import *
 
 class MainWindow (QMainWindow):
     def __init__ (self):
@@ -85,16 +86,32 @@ class MainWindow (QMainWindow):
 
     def registerProfile (self, name, config):
         """
-        config.host: string
-        config.post: integer
-        config.protocol: "POP3" | "IMAP"
-        config.username: string
-        config.password: string
-        config.passRemember: boolean
-        config.ssl: boolean
+        config.receiver.host: string
+        config.receiver.port: integer
+        config.receiver.protocol: "POP3" | "IMAP"
+        config.receiver.username: string
+        config.receiver.password: string
+        config.receiver.passRemember: boolean
+        config.receiver.ssl: boolean
+
+        config.sender.host: string
+        config.sender.port: integer
+        config.sender.protocol: "SMTP"
+        config.sender.auth: boolean
+        config.sender.username: string
+        config.sender.password: string
+        config.sender.passRemember: boolean
+        config.sender.ssl: boolean
+        config.sender.tls: boolean
+
+        config.email: string
         """
-        if config['protocol'] == "POP3":
-            self.currentProfile = MailboxPOP3(config)
+
+        if config['receiver']['protocol'] == "POP3":
+            self.currentProfile = MailboxPOP3(config['receiver'])
+        elif config['receiver']['protocol'] == "IMAP":
+            self.currentProfile = MailboxIMAP(config['receiver'])
+
         profile_id = self.getProfileID()
         filename = self.getProfileFile(profile_id, name)
         with open(filename, 'w') as stream:
@@ -104,5 +121,3 @@ class MainWindow (QMainWindow):
                 'config': config
             }))
         self.appendProfile(name, filename)
-
-
