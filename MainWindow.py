@@ -19,6 +19,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import uic
 
 from Dialog_NewProfile import *
+from Dialog_NewMail import *
 
 class MainWindow (QMainWindow):
     def __init__ (self):
@@ -27,10 +28,15 @@ class MainWindow (QMainWindow):
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.action_profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
+        self.newMailButton.clicked.connect(self.newMailDialog)
         self.profileDir = 'profile'
 
     def newProfileDialog (self):
         dialog = Dialog_NewProfile(self)
+        dialog.exec()
+
+    def newMailDialog (self):
+        dialog = Dialog_NewMail(self)
         dialog.exec()
 
     def appendProfile (self, name, entry_value):
