@@ -47,9 +47,10 @@ class MainWindow (QMainWindow):
         used_ids = []
         for name in files:
             try:
-                used_ids += int(name.split('-'))
+                used_ids.append(int(name.split('-')[0]))
             except:
                 pass
+        print(used_ids)
         while profile_id in used_ids:
             profile_id += 1
         return profile_id
