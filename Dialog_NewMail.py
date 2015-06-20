@@ -20,7 +20,7 @@ class Dialog_NewMail (QDialog):
 
         self.editor = ckeditor.WebView(self)
         self.layout.layout().addWidget(self.editor, 0, Qt.AlignCenter)
-        self.editor.addEditor(os.path.join(dirname, "js/ckeditor/ckeditor.js"), editor='editor')
+        self.editor.addEditor(os.path.join(dirname, "js/ckeditor/ckeditor.js"), editor='editor1')
 
         self.buttonBox.accepted.connect(self.OK)
 
