@@ -7,14 +7,6 @@ import yaml
 
 from functools import partial
 
-# try:
-#     from PySide import QtCore
-#     from PySide import QtWidgets
-# except:
-#     from PyQt5.QtCore import pyqtSlot as Slot
-#     from PyQt5 import QtCore
-#     from PyQt5 import QtWidgets
-
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QListWidgetItem
 from PyQt5 import QtCore
@@ -140,7 +132,9 @@ class MainWindow (QMainWindow):
             while self.mailList.count() > 0:
                 self.mailList.takeItem(0)
             for message in self.mailbox.list():
-                item = QListWidgetItem(message['header']['Subject'])
+                subject = message['header']['Subject']
+                subject = subject if isinstance(subject, str) else '<No subject>'
+                item = QListWidgetItem(subject)
                 item.setData(Qt.UserRole, message['id']);
                 self.mailList.addItem(item)
             self.mailList.itemClicked.connect(self.showMail)
