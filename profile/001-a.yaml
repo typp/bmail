@@ -1,4 +1,0 @@
-config: {host: a, passRemember: false, password: a, post: 110, protocol: IMAP, ssl: true,
-  username: a}
-id: 1
-name: a
