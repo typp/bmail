@@ -9,4 +9,5 @@
 .vimrc
 *.pyc
 profile/*.yaml
+__pycache__
 storage/**/*.dat
