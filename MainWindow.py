@@ -135,15 +135,7 @@ class MainWindow (QMainWindow):
             else:
                 return
             self.mailbox.sync()
-            while self.mailList.count() > 0:
-                self.mailList.takeItem(0)
-            for message in self.mailbox.list():
-                subject = message['header']['Subject']
-                subject = subject if isinstance(subject, str) else '<No subject>'
-                item = QListWidgetItem(subject)
-                item.setData(Qt.UserRole, message['id']);
-                self.mailList.addItem(item)
-            self.mailList.itemClicked.connect(self.showMail)
+            self.refreshMailList()
             if self.currentProfileAction:
                 font = QtGui.QFont()
                 font.setBold(False)
@@ -159,5 +151,17 @@ class MainWindow (QMainWindow):
         content = self.mailbox.get(mailno)
         self.webView.setHtml(content)
 
+    def refreshMailList (self):
+        while self.mailList.count() > 0:
+            self.mailList.takeItem(0)
+        for message in self.mailbox.list():
+            subject = message['header']['Subject']
+            subject = subject if isinstance(subject, str) else '<No subject>'
+            item = QListWidgetItem(subject)
+            item.setData(Qt.UserRole, message['id']);
+            self.mailList.addItem(item)
+        self.mailList.itemClicked.connect(self.showMail)
+
     def syncMailbox (self):
         self.mailbox.sync()
+        self.refreshMailList()

@@ -5,4 +5,4 @@ config:
   sender: {auth: false, host: '', passRemember: false, password: '', port: 110, protocol: SMTP,
     ssl: true, tls: false, username: ''}
 id: 2
-name: bmailisshit
+name: bmailisshit-pop
