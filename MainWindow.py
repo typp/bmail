@@ -23,6 +23,8 @@ from PyQt5 import uic
 from PyQt5 import QtGui
 
 from Dialog_NewProfile import *
+from Dialog_NewMail import *
+
 from MailboxPOP3 import *
 
 class MainWindow (QMainWindow):
@@ -32,6 +34,7 @@ class MainWindow (QMainWindow):
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
+        self.newMailButton.clicked.connect(self.newMailDialog)
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
@@ -53,7 +56,11 @@ class MainWindow (QMainWindow):
         dialog = Dialog_NewProfile(self)
         dialog.exec()
 
-    def appendProfile (self, profile, filename):
+    def newMailDialog (self):
+        dialog = Dialog_NewMail(self)
+        dialog.exec()
+
+    def appendProfile (self, name, entry_value):
         self.action_No_profile_known.setVisible(False)
         action = QtWidgets.QAction(self)
         action.setText(profile['name'])
