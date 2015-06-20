@@ -1,0 +1,4 @@
+config: {host: z, passRemember: false, password: z, post: 110, protocol: IMAP, ssl: true,
+  username: z}
+id: 1
+name: z

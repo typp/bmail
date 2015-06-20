@@ -59,7 +59,7 @@
     </property>
     <addaction name="action_New"/>
     <addaction name="separator"/>
-    <addaction name="actionNo_profile_known"/>
+    <addaction name="action_No_profile_known"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -81,12 +81,10 @@
     <string>&amp;New ...</string>
    </property>
    <property name="font">
-    <font>
-     <italic>false</italic>
-    </font>
+    <font/>
    </property>
   </action>
-  <action name="actionNo_profile_known">
+  <action name="action_No_profile_known">
    <property name="enabled">
     <bool>false</bool>
    </property>
