@@ -3,23 +3,60 @@
 import sys
 import getpass
 import poplib
+from email.parser import Parser as EmailParser
+import re
+import datetime
+
+from Dialog_Loading import *
 
 class MailboxPOP3:
 
-        def __init__ (self, config):
-                self.config = config
-                print("Connecting...", end="", flush=True)
-                pop3 = poplib.POP3_SSL if config['ssl'] else poplib.POP3
-                self.connector = pop3(config['host'], config['port'])
-                self.connector.user(config['username'])
-                self.connector.pass_(config['password'])
+    def __init__ (self, profile):
+        self.config = profile['config']
+        dialog = Dialog_Loading(self)
+        dialog.show()
+        pop3 = poplib.POP3_SSL if self.config['ssl'] else poplib.POP3
+        self.mails = []
+        safe_name = re.sub(r"[^A-Za-z0-9-]", "-", profile['name'])
+        self.storageDir = os.path.join(
+                'storage',
+                '%i-%s' % (profile['id'], safe_name))
+        try:
+            os.mkdir(self.storageDir)
+        except FileExistsError:
+            pass
+        self.connector = None
+        try:
+            self.connector = pop3(self.config['host'], self.config['port'])
+        except:
+            alert = QMessageBox(QMessageBox.Critical, "Error",
+                "Could not connect to %s." % self.config["host"])
+        else:
+            print("Logging in ...")
+            dialog.message.setText("Logging in ...")
+            self.connector.user(self.config['username'])
+            self.connector.pass_(self.config['password'])
+            dialog.hide()
 
-        def list (self):
-                print("LIST...")
-                mails = self.connector.list()
-                print(mails)
-                print(self.connector.retr(1))
+    def sync (self):
+        maillist = self.connector.list()
+        for mailcap in maillist[1]:
+            mailno = int(mailcap.decode('utf-8').split(' ')[0])
+            mail = self.connector.retr(mailno)
+            content = '\n'.join(x.decode('utf-8') for x in mail[1])
+            header = EmailParser().parsestr(content)
+            filename = datetime.datetime.now().isoformat()
+            filename += re.sub(r"[^A-Za-z0-9-]", "-", header['Subject'])
+            filename += '.dat'
+            path = os.path.join(self.storageDir, filename)
+            with open(path, 'w') as stream:
+                stream.write(content)
+            self.mails.append({'id': mailno, 'content': content})
 
-if __name__ == '__main__':
-        M = MailboxPOP3(sys.argv[1], int(sys.argv[2]))
-        M.list()
+    def list (self):
+        res = []
+        for mail in self.mails:
+            header = EmailParser().parsestr(mail['content'])
+            res.append({'id': mail['id'], 'header': header})
+        return res
+
