@@ -40,7 +40,14 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox"/>
+         <widget class="QSpinBox" name="spinBox">
+          <property name="maximum">
+           <number>65535</number>
+          </property>
+          <property name="value">
+           <number>110</number>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -57,6 +64,9 @@
          <widget class="QRadioButton" name="radioButton">
           <property name="text">
            <string>IMAP</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -99,6 +109,13 @@
         </item>
         <item row="1" column="1">
          <widget class="QLineEdit" name="lineEdit_2"/>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="checkBox_2">
+          <property name="text">
+           <string>Remember password</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
