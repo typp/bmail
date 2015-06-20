@@ -19,15 +19,30 @@ from PyQt5 import QtWidgets
 from PyQt5 import uic
 
 from Dialog_NewProfile import *
+from MailboxPOP3 import *
 
 class MainWindow (QMainWindow):
     def __init__ (self):
-        QtWidgets.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         dirname = os.path.dirname(os.path.abspath(__file__))
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.action_profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
         self.profileDir = 'profile'
+        self.currentProfile = None
+        self.updateAllProfiles()
+
+    def updateAllProfiles (self):
+        files = [os.path.join(self.profileDir, path)
+                for path
+                in os.listdir(self.profileDir)
+                if os.path.isfile(os.path.join(self.profileDir, path))]
+        for path in files:
+            profile = None
+            with open(path, 'r') as stream:
+                profile = yaml.load(stream)
+            if profile:
+                self.appendProfile(profile['name'], os.path.basename(path))
 
     def newProfileDialog (self):
         dialog = Dialog_NewProfile(self)
@@ -71,6 +86,8 @@ class MainWindow (QMainWindow):
         config.passRemember: boolean
         config.ssl: boolean
         """
+        if config['protocol'] == "POP3":
+            self.currentProfile = MailboxPOP3(config)
         profile_id = self.getProfileID()
         filename = self.getProfileFile(profile_id, name)
         with open(filename, 'w') as stream:

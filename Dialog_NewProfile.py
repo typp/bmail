@@ -20,7 +20,7 @@ class Dialog_NewProfile (QDialog):
         method = "POP3" if self.input_radio_POP3.isChecked() else "IMAP"
         self.parent.registerProfile(self.input_ProfileName.text(), {
             'host': self.input_Host.text(),
-            'post': self.input_Port.value(),
+            'port': self.input_Port.value(),
             'protocol': method,
             'username': self.input_Username.text(),
             'password': self.input_Password.text(),
