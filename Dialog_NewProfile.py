@@ -91,8 +91,8 @@ class Dialog_NewProfile (QDialog):
                 'username': self.input_sender_Username.text().strip() if not sender_reuse_creds else self.input_receiver_Username.text().strip(),
                 'password': self.input_sender_Password.text() if not sender_reuse_creds else self.input_receiver_Password.text(),
                 'passRemember': self.input_sender_checkbox_RememberPass.isChecked() if not sender_reuse_creds else self.input_receiver_checkbox_RememberPass.isChecked(),
-                'ssl': self.input_sender_radio_SSL.isChecked(),
-                'tls': self.input_sender_radio_TLS.isChecked()
+                'ssl': self.input_sender_checkbox_SSL.isChecked(),
+                'tls': self.input_sender_checkbox_TLS.isChecked()
             },
             'receiver': {
                 'host': self.input_receiver_Host.text().strip(),

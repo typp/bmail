@@ -25,6 +25,7 @@ class MailboxPOP3:
         self.local_mails = []
         self.connector = None
         self.dialog = None
+        self.synced = False
         self.dialog = Dialog_Loading(self)
         self.dialog.show()
         thr = threading.Thread(target=partial(self.create_connection, profile, self.dialog))
@@ -76,6 +77,20 @@ class MailboxPOP3:
             dialog.message.setText("Logging in ...")
             self.connector.user(self.config['username'])
             self.connector.pass_(self.config['password'])
+
+    def reconnect (self):
+        print("Resyncing ...")
+        if self.connector:
+            self.connector.quit()
+        pop3 = poplib.POP3_SSL if self.config['ssl'] else poplib.POP3
+        try:
+            self.connector = pop3(self.config['host'], self.config['port'])
+        except:
+            pass
+        else:
+            self.connector.user(self.config['username'])
+            self.connector.pass_(self.config['password'])
+
 
     def walk_and_decode (self, header, content_type):
         content = ''
@@ -142,6 +157,8 @@ class MailboxPOP3:
             self.connector.dele(mailno)
 
     def do_sync (self, dialog):
+        if self.synced:
+            self.reconnect()
         mail_list = self.connector.list()
         dialog.message.setText("Retrieving messages ...")
         print(mail_list[0].decode('utf-8'))
@@ -160,6 +177,7 @@ class MailboxPOP3:
             with open(path, 'wb') as stream:
                 stream.write(content)
             self.mails.append({'id': mailno, 'content': content})
+        self.synced = True
 
     def list (self):
         res = []
