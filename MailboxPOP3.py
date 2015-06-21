@@ -5,6 +5,7 @@ import sys
 import getpass
 import poplib
 import email.parser
+from email.header import decode_header
 import re
 import datetime
 import email
@@ -100,17 +101,23 @@ class MailboxPOP3:
         else:
             return content
 
+    def fdecode (self, content):
+        try:
+            tmp = decode_header(content)
+            return tmp[0][0].decode(tmp[0][1])
+        except:
+            return content
 
     def get (self, mailno):
         content = None
         for mail in self.local_mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
-                return header['From'], header['Subject'], header['Date'], self.decode(mail['content'])
+                return self.fdecode(header['From']), self.fdecode(header['Subject']), self.fdecode(header['Date']), self.decode(mail['content'])
         for mail in self.mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
-                return header['From'], header['Subject'], header['Date'], self.decode(mail['content'])
+                return self.fdecode(header['From']), self.fdecode(header['Subject']), self.fdecode(header['Date']), self.decode(mail['content'])
         return 'Mail is empty.'
 
     def sync (self):

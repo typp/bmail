@@ -119,6 +119,9 @@
               <property name="text">
                <string/>
               </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="2" column="0">
@@ -136,8 +139,20 @@
             </item>
             <item row="2" column="1">
              <widget class="QLabel" name="mail_Subject">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>false</bool>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -145,6 +160,9 @@
              <widget class="QLabel" name="mail_Date">
               <property name="text">
                <string/>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -254,6 +272,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="action_About"/>
+    <addaction name="action_Exit"/>
    </widget>
    <addaction name="menuProfile"/>
    <addaction name="menu"/>
@@ -283,6 +302,11 @@
     <font>
      <italic>true</italic>
     </font>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

@@ -55,6 +55,9 @@ class MailboxIMAP:
                 content += part_str.decode(charset)
         return content
 
+    def fdecode (self, content):
+        return content
+
     def decode (self, content):
         header = Parser.parsebytes(content)
         content = ''

@@ -33,6 +33,7 @@ class MainWindow (QMainWindow):
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
+        self.action_Exit.triggered.connect(self.close)
         self.action_About.triggered.connect(self.aboutDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
         self.answerButton.clicked.connect(self.answerMail)
@@ -47,6 +48,7 @@ class MainWindow (QMainWindow):
         self.sendbox = None
         self.currentMailNo = None
         self.updateAllProfiles()
+
 
     def updateAllProfiles (self):
         files = [os.path.join(self.profileDir, path)
@@ -169,6 +171,13 @@ class MainWindow (QMainWindow):
         mailno = item.data(Qt.UserRole)
         from_, subject, date, content = self.mailbox.get(mailno)
         self.mail_From.setText(from_)
+
+        self.mail_Subject.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
+        # cutting the subject to force word wrapping
+        for i in range(int(len(subject) / 100)):
+            subject = subject[:i*100] + ' ' + subject[i*100:]
+
         self.mail_Subject.setText(subject)
         self.mail_Date.setText(date)
         self.webView.setHtml(content)
@@ -178,7 +187,7 @@ class MainWindow (QMainWindow):
         while self.mailList.count() > 0:
             self.mailList.takeItem(0)
         for message in reversed(self.mailbox.list()):
-            subject = message['header']['Subject']
+            subject = self.mailbox.fdecode(message['header']['Subject'])
             subject = subject if isinstance(subject, str) else '<No subject>'
             item = QListWidgetItem(subject)
             item.setData(Qt.UserRole, message['id']);
