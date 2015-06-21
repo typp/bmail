@@ -5,10 +5,10 @@ import os
 import _thread
 from time import sleep
 
-from PyQt5.QtWidgets import QDialog
-from PyQt5 import QtCore
-from PyQt5 import QtWidgets
-from PyQt5 import uic
+from PyQt4.QtGui import QDialog
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+from PyQt4 import uic
 
 class Dialog_Loading (QDialog):
     def __init__ (self, parent, callback=None):

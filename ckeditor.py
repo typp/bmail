@@ -1,5 +1,5 @@
 import os, shutil
-from PyQt5 import QtGui, QtCore, QtWebKit, QtWebKitWidgets, QtWidgets
+from PyQt4 import QtGui, QtCore, QtWebKit, QtWebKit, QtGui
 
 class jsObject(QtCore.QObject):
     filePath = ''
@@ -16,22 +16,22 @@ class jsObject(QtCore.QObject):
 
     html = QtCore.pyqtProperty(str, fget=insertHtml)
 
-class WebPage(QtWebKitWidgets.QWebPage):
+class WebPage(QtWebKit.QWebPage):
     def __init__(self, parent=None):
-        QtWebKitWidgets.QWebPage.__init__(self, parent)
+        QtWebKit.QWebPage.__init__(self, parent)
 
     def javaScriptConsoleMessage(self, msg, line, source):
         print('JS ERROR: %s line %d: %s' % (source, line, msg))
 
-class WebView(QtWebKitWidgets.QWebView):
+class WebView(QtWebKit.QWebView):
     def __init__(self, parent=None):
-        QtWebKitWidgets.QWebView.__init__(self, parent)
+        QtWebKit.QWebView.__init__(self, parent)
 
         self.parent = parent
         web_page = WebPage(self)
         self.disableDrop = 0
 
-        web_page.setLinkDelegationPolicy(QtWebKitWidgets.QWebPage.DelegateAllLinks)
+        web_page.setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 
         self.setPage(web_page)
         self.page().mainFrame().javaScriptWindowObjectCleared.connect(self.addjsObject)
@@ -67,7 +67,7 @@ class WebView(QtWebKitWidgets.QWebView):
         baseurl = QtCore.QUrl("file:///") if 'baseurl' not in kargs else kargs['baseurl']
 
         self.setHtml(headHtml,baseurl)
-        QtWidgets.QApplication.processEvents()
+        QtGui.QApplication.processEvents()
 
         ckEditorHtml = """
         CKEDITOR.on('instanceReady', function(ev) {
@@ -98,7 +98,7 @@ class WebView(QtWebKitWidgets.QWebView):
 
         if event.modifiers() & QtCore.Qt.ControlModifier:
             if event.key() == QtCore.Qt.Key_V:
-                clip = QtWidgets.QApplication.clipboard()
+                clip = QtGui.QApplication.clipboard()
                 if clip.mimeData().hasImage():
                     self.paste(clip.mimeData())
                 elif clip.mimeData().urls():
@@ -121,7 +121,7 @@ class WebView(QtWebKitWidgets.QWebView):
             event.accept()
             return
         else:
-            QtWebKitWidgets.QWebView.keyPressEvent(self, event)
+            QtWebKit.QWebView.keyPressEvent(self, event)
 
     def dropEvent(self, event):
         handled=False
@@ -131,13 +131,13 @@ class WebView(QtWebKitWidgets.QWebView):
                 handled=True
 
             if not handled:
-                QtWebKitWidgets.QWebView.dropEvent(self,event)
+                QtWebKit.QWebView.dropEvent(self,event)
 
     def dragEvent(self, event):
         pass
 
     def mouseMoveEvent(self, event):
-        QtWebKitWidgets.QWebView.mouseMoveEvent(self,event)
+        QtWebKit.QWebView.mouseMoveEvent(self,event)
 
     def mousePressEvent(self, event):
         ht = self.page().mainFrame().hitTestContent(event.pos())
@@ -146,7 +146,7 @@ class WebView(QtWebKitWidgets.QWebView):
         else:
             self.disableDrop=1
 
-        QtWebKitWidgets.QWebView.mousePressEvent(self, event)
+        QtWebKit.QWebView.mousePressEvent(self, event)
 
     def canInsertFromMimeData(self, mimeData):
         # Thanks to Windows
@@ -157,7 +157,7 @@ class WebView(QtWebKitWidgets.QWebView):
 
     def paste(self, mimeData):
         if mimeData == None:
-            clipboard = QtWidgets.QApplication.clipboard()
+            clipboard = QtGui.QApplication.clipboard()
             mimeData = clipboard.mimeData()
         ptxt = unicode(mimeData.text()).replace("\n","<br>").replace(u'\u2028','<br>').replace(u'\xa0','&nbsp;')
 

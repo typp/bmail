@@ -3,11 +3,11 @@
 import sys
 import os
 
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QDialog
-from PyQt5 import QtCore
-from PyQt5 import QtWidgets
-from PyQt5 import uic
+from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QDialog
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+from PyQt4 import uic
 
 class Dialog_NewProfile (QDialog):
     def __init__ (self, parent):

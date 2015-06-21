@@ -5,12 +5,12 @@ import os
 import threading
 from functools import partial
 
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog
-from PyQt5 import uic
+from PyQt4.QtGui import QMessageBox
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
+from PyQt4 import QtGui
+from PyQt4.QtGui import QDialog
+from PyQt4 import uic
 
 import ckeditor
 
@@ -48,7 +48,7 @@ class Dialog_NewMail (QDialog):
         while True:
             thr.join(0.1)
             if thr.is_alive():
-                QtWidgets.QApplication.processEvents()
+                QtGui.QApplication.processEvents()
                 dialog.repaint()
                 dialog.update()
             else:

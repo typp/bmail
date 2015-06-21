@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt4.QtGui import QMessageBox
 
 import smtplib
 

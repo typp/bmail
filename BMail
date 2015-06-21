@@ -5,10 +5,10 @@ import sys
 import signal
 
 try:
-    from PyQt5.QtCore import *
-    from PyQt5.QtWidgets import QApplication
+    from PyQt4.QtCore import *
+    from PyQt4.QtGui import QApplication
 except ImportError:
-    print("%s: Please install correctly PyQt5" % (sys.argv[0]))
+    print("%s: Please install correctly PyQt4" % (sys.argv[0]))
     sys.exit(1)
 
 from MainWindow import *

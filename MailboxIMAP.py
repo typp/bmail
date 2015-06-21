@@ -6,7 +6,8 @@ import threading
 from time import sleep
 
 from Dialog_Loading import *
-from PyQt5.QtWidgets import QMessageBox
+from PyQt4.QtGui import QMessageBox
+from email.header import decode_header
 from functools import partial
 
 Parser = email.parser.BytesParser()
@@ -23,7 +24,7 @@ class MailboxIMAP:
         while True:
             thr.join(0.1)
             if thr.is_alive():
-                QtWidgets.QApplication.processEvents()
+                QtGui.QApplication.processEvents()
                 self.dialog.repaint()
                 self.dialog.update()
             else:
@@ -32,8 +33,12 @@ class MailboxIMAP:
 
     def logout (self):
         if self.connector:
-            print('Closing connection.')
-            self.connector.logout()
+            try:
+                print('Closing connection.')
+                self.connector.logout()
+            except Exception:
+                pass
+            self.connector = None
 
     def create_connection (self, profile, dialog):
         imap = imaplib.IMAP4_SSL if self.config['ssl'] else imaplib.IMAP4
@@ -56,7 +61,11 @@ class MailboxIMAP:
         return content
 
     def fdecode (self, content):
-        return content
+        try:
+            tmp = decode_header(content)
+            return tmp[0][0].decode(tmp[0][1])
+        except:
+            return content
 
     def decode (self, content):
         header = Parser.parsebytes(content)
@@ -74,13 +83,10 @@ class MailboxIMAP:
         rv, data = self.connector.fetch(str(mailno), '(RFC822)')
         if rv != 'OK': return None
         header = Parser.parsebytes(data[0][1])
-        return header['From'], header['Subject'], header['Date'], self.decode(data[0][1])
+        return self.fdecode(header['From']), self.fdecode(header['Subject']), self.fdecode(header['Date']), self.decode(data[0][1])
 
-    def sync (self):
-        pass
-
-    def list (self):
-        mails = []
+    def do_sync (self):
+        self.mails = []
         rv, data = self.connector.select('INBOX')
         if rv != 'OK': return []
         rv, data = self.connector.search(None, "ALL")
@@ -89,8 +95,26 @@ class MailboxIMAP:
             rv, data = self.connector.fetch(str(mailno), '(RFC822)')
             if rv != 'OK': continue
             header = Parser.parsebytes(data[0][1])
-            mails.append({'id': mailno, 'header': header})
-        return mails
+            self.mails.append({'id': mailno, 'header': header})
+
+    def sync (self):
+        dialog = Dialog_Loading(self)
+        dialog.show()
+        dialog.message.setText("Retrieving messages ...")
+        thr = threading.Thread(target=self.do_sync)
+        thr.start()
+        while True:
+            thr.join(0.1)
+            if thr.is_alive():
+                QtGui.QApplication.processEvents()
+                dialog.repaint()
+                dialog.update()
+            else:
+                dialog.hide()
+                break
+
+    def list (self):
+        return self.mails
 
     def delete (self, mailno):
         rv, data = self.connector.store(str(mailno), '+FLAGS', r'(\Deleted)')

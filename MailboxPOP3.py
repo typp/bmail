@@ -11,7 +11,7 @@ import threading
 from time import sleep
 
 from Dialog_Loading import *
-from PyQt5.QtWidgets import QMessageBox
+from PyQt4.QtGui import QMessageBox
 from functools import partial
 
 Parser = email.parser.BytesParser()
@@ -33,7 +33,7 @@ class MailboxPOP3:
         while True:
             thr.join(0.1)
             if thr.is_alive():
-                QtWidgets.QApplication.processEvents()
+                QtGui.QApplication.processEvents()
                 self.dialog.repaint()
                 self.dialog.update()
             else:
@@ -91,7 +91,6 @@ class MailboxPOP3:
             self.connector.user(self.config['username'])
             self.connector.pass_(self.config['password'])
 
-
     def walk_and_decode (self, header, content_type):
         content = ''
         for part in header.walk():
@@ -140,7 +139,7 @@ class MailboxPOP3:
         while True:
             thr.join(0.1)
             if thr.is_alive():
-                QtWidgets.QApplication.processEvents()
+                QtGui.QApplication.processEvents()
                 self.dialog.repaint()
                 self.dialog.update()
             else:
@@ -192,4 +191,8 @@ class MailboxPOP3:
     def logout (self):
         if self.connector:
             print("Closing connection.")
-            self.connector.quit()
+            try:
+                self.connector.quit()
+            except Exception:
+                pass
+            self.connector = None

@@ -10,15 +10,15 @@ import email.utils
 
 from functools import partial
 
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QListWidgetItem
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
-from PyQt5 import QtWidgets
-from PyQt5 import uic
-from PyQt5 import QtGui
-from PyQt5.QtWebKitWidgets import QWebPage
+from PyQt4.QtGui import QMessageBox
+from PyQt4.QtGui import QMainWindow
+from PyQt4.QtGui import QListWidgetItem
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
+from PyQt4 import QtGui
+from PyQt4 import uic
+from PyQt4 import QtGui
+from PyQt4.QtWebKit import QWebPage
 
 from Dialog_NewProfile import *
 from Dialog_NewMail import *
@@ -57,7 +57,7 @@ class MainWindow (QMainWindow):
         files = [os.path.join(self.profileDir, path)
                 for path
                 in os.listdir(self.profileDir)
-                if os.path.isfile(os.path.join(self.profileDir, path))]
+                 if os.path.isfile(os.path.join(self.profileDir, path)) and path.endswith('.yaml')]
         for path in files:
             profile = None
             with open(path, 'r') as stream:
@@ -82,7 +82,7 @@ class MainWindow (QMainWindow):
 
     def appendProfile (self, profile, filename):
         self.action_No_profile_known.setVisible(False)
-        action = QtWidgets.QAction(self)
+        action = QtGui.QAction(self)
         action.setText(profile['name'])
         action.setObjectName('action_' + filename)
         action.triggered.connect(partial(self.selectProfile, action, profile))
