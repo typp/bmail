@@ -20,6 +20,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 
 from Dialog_NewProfile import *
 from Dialog_NewMail import *
+from Dialog_About import *
 
 from MailboxPOP3 import *
 from MailboxIMAP import *
@@ -32,6 +33,7 @@ class MainWindow (QMainWindow):
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
+        self.action_About.triggered.connect(self.aboutDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
         self.syncButton.clicked.connect(self.syncMailbox)
         self.deleteButton.clicked.connect(self.deleteMail)
@@ -59,6 +61,10 @@ class MainWindow (QMainWindow):
 
     def newProfileDialog (self):
         dialog = Dialog_NewProfile(self)
+        dialog.exec()
+
+    def aboutDialog (self):
+        dialog = Dialog_About(self)
         dialog.exec()
 
     def newMailDialog (self):
