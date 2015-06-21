@@ -87,7 +87,8 @@ class MailboxPOP3:
         print(mailno)
         for mail in self.mails:
             if mail['id'] == mailno:
-                return self.decode(mail['content'])
+                header = Parser.parsebytes(mail['content'])
+                return header['From'], header['Subject'], self.decode(mail['content'])
         return 'Mail is empty.'
 
     def sync (self):
