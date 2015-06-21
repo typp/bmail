@@ -2,9 +2,12 @@
 
 import imaplib
 import email.parser
+import threading
+from time import sleep
 
 from Dialog_Loading import *
 from PyQt5.QtWidgets import QMessageBox
+from functools import partial
 
 Parser = email.parser.BytesParser()
 
@@ -12,16 +15,25 @@ class MailboxIMAP:
     def __init__ (self, profile):
         self.config = profile['config']['receiver']
         self.connector = None
-        self.create_connection(profile)
+        self.dialog = Dialog_Loading(self)
+        self.dialog.show()
+        thr = threading.Thread(target=partial(self.create_connection, profile, self.dialog))
+        thr.start()
+        while True:
+            thr.join(0.1)
+            if thr.is_alive():
+                QtWidgets.QApplication.processEvents()
+                self.dialog.repaint()
+                self.dialog.update()
+            else:
+                self.dialog.hide()
+                break
 
     def __del__ (self):
         if self.connector:
             self.connector.logout()
 
-    def create_connection (self, profile):
-        dialog = Dialog_Loading(self)
-        dialog.show()
-
+    def create_connection (self, profile, dialog):
         imap = imaplib.IMAP4_SSL if self.config['ssl'] else imaplib.IMAP4
         try:
             self.connector = imap(self.config['host'], self.config['port'])
@@ -32,7 +44,6 @@ class MailboxIMAP:
             print("Logging in ...")
             dialog.message.setText("Logging in ...")
             self.connector.login(self.config['username'], self.config['password'])
-            dialog.hide()
 
     def walk_and_decode (self, header, content_type):
         content = ''
@@ -58,7 +69,8 @@ class MailboxIMAP:
     def get (self, mailno):
         rv, data = self.connector.fetch(str(mailno), '(RFC822)')
         if rv != 'OK': return None
-        return self.decode(data[0][1])
+        header = Parser.parsebytes(data[0][1])
+        return header['From'], header['Subject'], self.decode(data[0][1])
 
     def sync (self):
         pass

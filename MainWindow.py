@@ -154,10 +154,10 @@ class MainWindow (QMainWindow):
 
     def showMail (self, item):
         mailno = item.data(Qt.UserRole)
-        content = self.mailbox.get(mailno)
+        from_, subject, content = self.mailbox.get(mailno)
         self.webView.setHtml(content)
-        self.mail_From.setText("une certaine personne!")
-        self.mail_Subject.setText("osef du sujet!")
+        self.mail_From.setText(from_)
+        self.mail_Subject.setText(subject)
 
     def refreshMailList (self):
         while self.mailList.count() > 0:
