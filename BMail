@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import signal
 
 try:
     from PyQt5.QtCore import *
@@ -14,6 +15,7 @@ from MainWindow import *
 
 if __name__ == '__main__':
     try:
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
         app = QApplication(sys.argv)
         window = MainWindow()
         window.show()
