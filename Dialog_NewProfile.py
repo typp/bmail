@@ -28,6 +28,10 @@ class Dialog_NewProfile (QDialog):
         self.input_receiver_checkbox_SSL.stateChanged.connect(self.toggleReceiverPort)
         self.input_receiver_Port.valueChanged.connect(self.toggleAutoPortSelection)
         self.input_sender_Port.valueChanged.connect(self.toggleAutoPortSelection)
+        self.input_sender_radio_SMTP.toggled.connect(self.fixSMTPCheckbox)
+
+    def fixSMTPCheckbox (self, state):
+        self.input_sender_radio_SMTP.setChecked(True)
 
     def toggleAutoPortSelection (self, value):
         self.autoPortSelection = False
