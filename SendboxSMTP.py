@@ -84,5 +84,5 @@ class SendboxSMTP:
             try:
                 self.reconnect()
                 self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
-            except:
+            except Exception:
                 QMessageBox(QMessageBox.Critical, "Error", "Could not connect to SMTP server.")

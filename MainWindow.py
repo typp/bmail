@@ -8,6 +8,7 @@ import webbrowser
 
 from functools import partial
 
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QListWidgetItem
 from PyQt5 import QtCore
@@ -141,9 +142,12 @@ class MainWindow (QMainWindow):
     def selectProfile (self, action, profile):
         if not self.currentProfile or profile['id'] != self.currentProfile['id']:
             self.logout()
-            self.connectToServers(profile)
-            self.mailbox.sync()
-            self.refreshMailList()
+            try:
+                self.connectToServers(profile)
+                self.mailbox.sync()
+                self.refreshMailList()
+            except Exception:
+                QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to join the servers.")
             if self.currentProfileAction:
                 font = QtGui.QFont()
                 font.setBold(False)
