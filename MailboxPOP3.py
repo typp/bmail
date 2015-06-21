@@ -4,7 +4,7 @@
 import poplib
 import re
 import datetime
-import email
+import email, email.parser
 from email.header import decode_header
 import quopri
 import threading
