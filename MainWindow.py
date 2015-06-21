@@ -29,6 +29,7 @@ class MainWindow (QMainWindow):
         self.profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
+        self.syncButton.clicked.connect(self.syncMailbox)
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
@@ -141,7 +142,7 @@ class MainWindow (QMainWindow):
             if self.currentProfileAction:
                 font = QtGui.QFont()
                 font.setBold(False)
-                self.currentProfileAction.setFont(False)
+                self.currentProfileAction.setFont(font)
             self.currentProfileAction = action
             font = QtGui.QFont()
             font.setBold(True)
@@ -152,3 +153,6 @@ class MainWindow (QMainWindow):
         mailno = item.data(Qt.UserRole)
         content = self.mailbox.get(mailno)
         self.webView.setHtml(content)
+
+    def syncMailbox (self):
+        self.mailbox.sync()

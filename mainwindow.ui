@@ -20,7 +20,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="sizeConstraint">
          <enum>QLayout::SetNoConstraint</enum>
@@ -36,7 +36,7 @@
          <widget class="QListWidget" name="mailList"/>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="syncButton">
           <property name="text">
            <string>↻</string>
           </property>
@@ -75,7 +75,6 @@
          </layout>
         </item>
        </layout>
-       <zorder></zorder>
        <zorder></zorder>
       </widget>
      </widget>

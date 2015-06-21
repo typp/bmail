@@ -87,7 +87,7 @@ class MailboxPOP3:
             subject = header['Subject'] if isinstance(header['Subject'], str) else '<No subject>'
             filename += re.sub(r"[^A-Za-z0-9-]", "-", subject)
             filename = filename[:92]
-            filename += '.dat'
+            filename += '.xml'
             path = os.path.join(self.storageDir, filename)
             with open(path, 'w') as stream:
                 stream.write(self.decode(content))
