@@ -5,6 +5,8 @@ import os
 import re
 import yaml
 import webbrowser
+import datetime
+import email.utils
 
 from functools import partial
 
@@ -172,13 +174,30 @@ class MainWindow (QMainWindow):
             self.currentProfile = profile
 
     def showMail (self, item):
-        mailno = item.data(Qt.UserRole)
-        from_, subject, date, content = self.mailbox.get(mailno)
-        self.mail_From.setText(from_)
+        try:
+            mailno = item.data(Qt.UserRole)
+            from_, subject, date, content = self.mailbox.get(mailno)
+            self.mail_From.setText(from_)
+        except:
+            QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to retriview the email.").exec_()
 
-        # cutting the subject to force word wrapping
-        for i in range(int(len(subject) / 100)):
-            subject = subject[:i*100] + ' ' + subject[i*100:]
+        try:
+            # converting date to local-date
+            _date = date
+            date_tuple = email.utils.parsedate_tz(date)
+            if date_tuple:
+                local_date = datetime.datetime.fromtimestamp(email.utils.mktime_tz(date_tuple))
+                _date = local_date.strftime("%a, %d %b %Y %H:%M:%S")
+        except: pass
+        else: date = _date
+
+        try:
+            # cutting the subject to force word wrapping
+            _subject = subject
+            for i in range(int(len(_subject) / 100)):
+                _subject = _subject[:i*100] + ' ' + _subject[i*100:]
+        except: pass
+        else: subject = _subject
 
         self.mail_Subject.setText(subject)
         self.mail_Date.setText(date)
