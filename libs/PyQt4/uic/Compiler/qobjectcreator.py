@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2015 Riverbank Computing Limited.
+## Copyright (C) 2012 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -39,7 +39,6 @@
 
 
 import logging
-import sys
 
 try:
     set()
@@ -48,11 +47,6 @@ except NameError:
 
 from PyQt4.uic.Compiler.indenter import write_code
 from PyQt4.uic.Compiler.qtproxies import QtGui, Literal, strict_getattr
-
-if sys.hexversion >= 0x03000000:
-    from PyQt4.uic.port_v3.as_string import as_string
-else:
-    from PyQt4.uic.port_v2.as_string import as_string
 
 
 logger = logging.getLogger(__name__)
@@ -136,13 +130,7 @@ class _CustomWidgetLoader(object):
             _, module = self._widgets[widget]
             imports.setdefault(module, []).append(widget)
 
-        # For repeatability sort the imports and the classes being imported and
-        # in a way that is portable between Python v2 and v3.
-        modules = list(imports.keys())
-        modules.sort()
-        for module in modules:
-            classes = imports[module]
-            classes.sort()
+        for module, classes in imports.items():
             write_code("from %s import %s" % (module, ", ".join(classes)))
 
 
@@ -171,9 +159,6 @@ class CompilerCreatorPolicy(object):
 
     def getSlot(self, object, slotname):
         return Literal("%s.%s" % (object, slotname))
-
-    def asString(self, s):
-        return as_string(s)
 
     def _writeOutImports(self):
         for module in self._modules:

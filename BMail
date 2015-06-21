@@ -1,24 +1,10 @@
-#! /usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/bin/bash
 
-import sys
-import signal
+if [ ! -d "./venv" ]; then
+    virtualenv -p /usr/bin/python3.3 $PWD/venv
+    cp -r libs/* venv/lib/python3.3/site-packages/
+fi
 
-try:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import QApplication
-except ImportError:
-    print("%s: Please install correctly PyQt4" % (sys.argv[0]))
-    sys.exit(1)
-
-from MainWindow import *
-
-if __name__ == '__main__':
-    try:
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
-        app = QApplication(sys.argv)
-        window = MainWindow()
-        window.show()
-        sys.exit(app.exec_())
-    except Exception as inst:
-        print("BMail: Critical error: %s" % (inst,))
+source ./venv/bin/activate
+./venv/bin/python3 BMail.py
+deactivate

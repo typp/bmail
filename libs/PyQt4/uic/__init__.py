@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2015 Riverbank Computing Limited.
+## Copyright (C) 2011 Riverbank Computing Limited.
 ## Copyright (C) 2006 Thorsten Marek.
 ## All right reserved.
 ##
@@ -159,6 +159,7 @@ def compileUi(uifile, pyfile, execute=False, indent=4, pyqt3_wrapper=False, from
     module is foo_rc.
     """
 
+    from time import ctime
     from PyQt4.QtCore import PYQT_VERSION_STR
 
     try:

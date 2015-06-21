@@ -1,18 +1,23 @@
 #############################################################################
 ##
-## Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+## Copyright (c) 2013 Riverbank Computing Limited <info@riverbankcomputing.com>
 ## 
-## This file is part of PyQt4.
+## This file is part of PyQt.
 ## 
-## This file may be used under the terms of the GNU General Public License
-## version 3.0 as published by the Free Software Foundation and appearing in
-## the file LICENSE included in the packaging of this file.  Please review the
-## following information to ensure the GNU General Public License version 3.0
-## requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+## This file may be used under the terms of the GNU General Public
+## License versions 2.0 or 3.0 as published by the Free Software
+## Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
+## included in the packaging of this file.  Alternatively you may (at
+## your option) use any later version of the GNU General Public
+## License if such license has been publicly approved by Riverbank
+## Computing Limited (or its successors, if any) and the KDE Free Qt
+## Foundation. In addition, as a special exception, Riverbank gives you
+## certain additional rights. These rights are described in the Riverbank
+## GPL Exception version 1.1, which can be found in the file
+## GPL_EXCEPTION.txt in this package.
 ## 
-## If you do not wish to use this file under the terms of the GPL version 3.0
-## then you may purchase a commercial license.  For more information contact
-## info@riverbankcomputing.com.
+## If you are unsure which license is appropriate for your use, please
+## contact the sales department at sales@riverbankcomputing.com.
 ## 
 ## This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 ## WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
@@ -76,8 +81,6 @@ class Driver(object):
     def _generate(self):
         """ Generate the Python code. """
 
-        needs_close = False
-
         if sys.hexversion >= 0x03000000:
             if self._opts.output == '-':
                 from io import TextIOWrapper
@@ -85,20 +88,15 @@ class Driver(object):
                 pyfile = TextIOWrapper(sys.stdout.buffer, encoding='utf8')
             else:
                 pyfile = open(self._opts.output, 'wt', encoding='utf8')
-                needs_close = True
         else:
             if self._opts.output == '-':
                 pyfile = sys.stdout
             else:
                 pyfile = open(self._opts.output, 'wt')
-                needs_close = True
 
         compileUi(self._ui_file, pyfile, self._opts.execute, self._opts.indent,
                 self._opts.pyqt3_wrapper, self._opts.from_imports,
                 self._opts.resource_suffix)
-
-        if needs_close:
-            pyfile.close()
 
     def on_IOError(self, e):
         """ Handle an IOError exception. """
