@@ -175,7 +175,7 @@ class MainWindow (QMainWindow):
     def refreshMailList (self):
         while self.mailList.count() > 0:
             self.mailList.takeItem(0)
-        for message in self.mailbox.list():
+        for message in reversed(self.mailbox.list()):
             subject = message['header']['Subject']
             subject = subject if isinstance(subject, str) else '<No subject>'
             item = QListWidgetItem(subject)
