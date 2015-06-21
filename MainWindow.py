@@ -39,6 +39,7 @@ class MainWindow (QMainWindow):
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
+        self.mailbox = None
         self.updateAllProfiles()
 
     def updateAllProfiles (self):
@@ -114,11 +115,6 @@ class MainWindow (QMainWindow):
         config.email: string
         """
 
-        if config['receiver']['protocol'] == "POP3":
-            self.currentProfile = MailboxPOP3(config['receiver'])
-        elif config['receiver']['protocol'] == "IMAP":
-            self.currentProfile = MailboxIMAP(config['receiver'])
-
         profile_id = self.getProfileID()
         filename = self.getProfileFile(profile_id, name)
         profile = {
@@ -133,8 +129,10 @@ class MainWindow (QMainWindow):
 
     def selectProfile (self, action, profile):
         if not self.currentProfile or profile['id'] != self.currentProfile['id']:
-            if profile['config']['protocol'] == "POP3":
+            if profile['config']['receiver']['protocol'] == "POP3":
                 self.mailbox = MailboxPOP3(profile)
+            elif profile['config']['receiver']['protocol'] == "IMAP":
+                self.mailbox = MailboxIMAP(profile)
             else:
                 return
             self.mailbox.sync()

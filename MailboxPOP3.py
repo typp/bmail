@@ -16,7 +16,7 @@ Parser = email.parser.BytesParser()
 class MailboxPOP3:
 
     def __init__ (self, profile):
-        self.config = profile['config']
+        self.config = profile['config']['receiver']
         self.storageDir = None
         self.mails = []
         self.connector = None
