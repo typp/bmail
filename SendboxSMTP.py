@@ -44,7 +44,19 @@ class SendboxSMTP:
                     pass
             self.connector.login(self.config['username'], self.config['password'])
 
-    def __del__(self):
+    def reconnect (self):
+        self.connector.connect(self.config['host'], self.config['port'])
+        if self.config['auth']:
+            if self.config['tls']:
+                try:
+                    self.connector.ehlo()
+                    self.connector.starttls()
+                    self.connector.ehlo()
+                except smtplib.SMTPException:
+                    pass
+            self.connector.login(self.config['username'], self.config['password'])
+
+    def logout (self):
         if self.connector:
             try:
                 self.connector.quit()
@@ -64,4 +76,8 @@ class SendboxSMTP:
         mail.attach(MIMEText(text, 'plain'))
         mail.attach(MIMEText(html, 'html'))
 
-        self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
+        try:
+            self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
+        except smtplib.SMTPServerDisconnected:
+            self.reconnect()
+            self.connector.sendmail(mail['From'], mail['To'], mail.as_string())

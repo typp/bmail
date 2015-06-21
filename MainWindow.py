@@ -33,15 +33,15 @@ class MainWindow (QMainWindow):
         self.action_New.triggered.connect(self.newProfileDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
         self.syncButton.clicked.connect(self.syncMailbox)
-
+        self.deleteButton.clicked.connect(self.deleteMail)
         self.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         self.webView.linkClicked.connect(self.openLinkInBrowser)
-
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
         self.mailbox = None
         self.sendbox = None
+        self.currentMailNo = None
         self.updateAllProfiles()
 
     def updateAllProfiles (self):
@@ -128,18 +128,20 @@ class MainWindow (QMainWindow):
         action = self.appendProfile(profile, filename)
         self.selectProfile(action, profile)
 
+    def connectToServers (self, profile):
+        recv = profile['config']['receiver']['protocol']
+        send = profile['config']['sender']['protocol']
+        if recv == "POP3":
+            self.mailbox = MailboxPOP3(profile)
+        elif recv == "IMAP":
+            self.mailbox = MailboxIMAP(profile)
+        if send == "SMTP":
+            self.sendbox = SendboxSMTP(profile)
+
     def selectProfile (self, action, profile):
         if not self.currentProfile or profile['id'] != self.currentProfile['id']:
-            if profile['config']['receiver']['protocol'] == "POP3":
-                self.mailbox = MailboxPOP3(profile)
-            elif profile['config']['receiver']['protocol'] == "IMAP":
-                self.mailbox = MailboxIMAP(profile)
-            else:
-                return
-            if profile['config']['sender']['protocol'] == "SMTP":
-                self.sendbox = SendboxSMTP(profile)
-            else:
-                return
+            self.logout()
+            self.connectToServers(profile)
             self.mailbox.sync()
             self.refreshMailList()
             if self.currentProfileAction:
@@ -158,6 +160,7 @@ class MainWindow (QMainWindow):
         self.webView.setHtml(content)
         self.mail_From.setText(from_)
         self.mail_Subject.setText(subject)
+        self.currentMailNo = mailno
 
     def refreshMailList (self):
         while self.mailList.count() > 0:
@@ -176,3 +179,21 @@ class MainWindow (QMainWindow):
 
     def openLinkInBrowser(self, url):
         webbrowser.open(url.toString())
+
+    def deleteMail (self):
+        if self.currentMailNo != None: # currentMailNo can be 0
+            self.mailbox.delete(self.currentMailNo)
+            self.mailList.takeItem(self.mailList.currentRow())
+
+    def logout (self):
+        if self.mailbox:
+            self.mailbox.logout()
+            self.mailbox = None
+        if self.sendbox:
+            self.sendbox.logout()
+            self.sendbox = None
+
+    def closeEvent (self, event):
+        if self.mailbox:
+            self.logout()
+            event.accept()

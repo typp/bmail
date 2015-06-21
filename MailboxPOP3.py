@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 import getpass
@@ -38,6 +39,24 @@ class MailboxPOP3:
             else:
                 self.dialog.hide()
                 break
+        self.get_local_mails()
+
+    def read_local_mail (self, filename):
+        data = bytes()
+        with open(filename, "rb") as stream:
+            chunk = stream.read(4096)
+            while chunk:
+                data += chunk
+                chunk = stream.read(4096)
+        return data
+
+    def get_local_mails (self):
+        files = [os.path.join(self.storageDir, name) for name in os.listdir(self.storageDir)]
+        mailno = -1
+        for path in files:
+            data = self.read_local_mail(path)
+            self.mails.append({'id': mailno, 'content': data})
+            mailno -= 1
 
     def create_connection (self, profile, dialog):
         pop3 = poplib.POP3_SSL if self.config['ssl'] else poplib.POP3
@@ -105,6 +124,9 @@ class MailboxPOP3:
                 self.dialog.hide()
                 break
 
+    def delete (self, mailno):
+        self.connector.dele(mailno)
+
     def do_sync (self, dialog):
         mail_list = self.connector.list()
         dialog.message.setText("Retrieving messages ...")
@@ -119,8 +141,8 @@ class MailboxPOP3:
             filename = filename[:92]
             filename += '.xml'
             path = os.path.join(self.storageDir, filename)
-            with open(path, 'w') as stream:
-                stream.write(self.decode(content))
+            with open(path, 'wb') as stream:
+                stream.write(content)
             self.mails.append({'id': mailno, 'content': content})
 
     def list (self):
@@ -129,4 +151,9 @@ class MailboxPOP3:
             header = Parser.parsebytes(mail['content'])
             res.append({'id': mail['id'], 'header': header})
         return res
+
+    def logout (self):
+        if self.connector:
+            print("Closing connection.")
+            self.connector.quit()
 

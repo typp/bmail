@@ -29,8 +29,9 @@ class MailboxIMAP:
                 self.dialog.hide()
                 break
 
-    def __del__ (self):
+    def logout (self):
         if self.connector:
+            print('Closing connection.')
             self.connector.logout()
 
     def create_connection (self, profile, dialog):
