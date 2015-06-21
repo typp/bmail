@@ -1,8 +1,0 @@
-config:
-  email: vivien.pradelles@free.fr
-  receiver: {host: pop.free.fr, passRemember: false, password: scottie, port: 110,
-    protocol: POP3, ssl: false, username: vivien.pradelles}
-  sender: {auth: false, host: '', passRemember: false, password: '', port: 110, protocol: SMTP,
-    ssl: true, tls: false, username: ''}
-id: 1
-name: vivien.pradelles

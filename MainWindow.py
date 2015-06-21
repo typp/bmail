@@ -41,6 +41,8 @@ class MainWindow (QMainWindow):
         self.deleteButton.clicked.connect(self.deleteMail)
         self.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         self.webView.linkClicked.connect(self.openLinkInBrowser)
+        self.mail_Subject.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.mail_From.setTextInteractionFlags(Qt.TextSelectableByMouse)
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
@@ -173,8 +175,6 @@ class MainWindow (QMainWindow):
         mailno = item.data(Qt.UserRole)
         from_, subject, date, content = self.mailbox.get(mailno)
         self.mail_From.setText(from_)
-
-        self.mail_Subject.setTextInteractionFlags(Qt.TextSelectableByMouse)
 
         # cutting the subject to force word wrapping
         for i in range(int(len(subject) / 100)):

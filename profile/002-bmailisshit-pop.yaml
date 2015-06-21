@@ -1,8 +1,0 @@
-config:
-  email: bmailisshit@gmail.com
-  receiver: {host: pop.gmail.com, passRemember: false, password: bullshitonbocal,
-    port: 995, protocol: POP3, ssl: true, username: bmailisshit@gmail.com}
-  sender: {auth: true, host: 'smtp.gmail.com', passRemember: true, password: bullshitonbocal, port: 465, protocol: SMTP,
-    ssl: true, tls: false, username: bmailisshit@gmail.com}
-id: 2
-name: bmailisshit-pop
