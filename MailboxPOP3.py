@@ -70,7 +70,7 @@ class MailboxPOP3:
             pass
         try:
             self.connector = pop3(self.config['host'], self.config['port'])
-        except:
+        except Exception:
             pass
         else:
             print("Logging in ...")
@@ -85,7 +85,7 @@ class MailboxPOP3:
         pop3 = poplib.POP3_SSL if self.config['ssl'] else poplib.POP3
         try:
             self.connector = pop3(self.config['host'], self.config['port'])
-        except:
+        except Exception:
             pass
         else:
             self.connector.user(self.config['username'])
@@ -107,7 +107,7 @@ class MailboxPOP3:
             content = self.walk_and_decode(header, 'text/html')
             if not content:
                 content = self.walk_and_decode(header, 'text/plain')
-        except:
+        except Exception:
             return 'Cannot decode message.'
         else:
             return content
@@ -116,7 +116,7 @@ class MailboxPOP3:
         try:
             tmp = decode_header(content)
             return tmp[0][0].decode(tmp[0][1])
-        except:
+        except Exception:
             return content
 
     def get (self, mailno):

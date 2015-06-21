@@ -44,7 +44,7 @@ class MailboxIMAP:
         imap = imaplib.IMAP4_SSL if self.config['ssl'] else imaplib.IMAP4
         try:
             self.connector = imap(self.config['host'], self.config['port'])
-        except:
+        except Exception:
             pass
         else:
             print("Logging in ...")
@@ -64,7 +64,7 @@ class MailboxIMAP:
         try:
             tmp = decode_header(content)
             return tmp[0][0].decode(tmp[0][1])
-        except:
+        except Exception:
             return content
 
     def decode (self, content):
@@ -74,7 +74,7 @@ class MailboxIMAP:
             content = self.walk_and_decode(header, 'text/html')
             if not content:
                 content = self.walk_and_decode(header, 'text/plain')
-        except:
+        except Exception:
             return 'Cannot decode message'
         else:
             return content

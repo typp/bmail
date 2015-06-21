@@ -97,7 +97,7 @@ class MainWindow (QMainWindow):
         for name in files:
             try:
                 used_ids.append(int(name.split('-')[0]))
-            except:
+            except Exception:
                 pass
         while profile_id in used_ids:
             profile_id += 1
@@ -178,7 +178,7 @@ class MainWindow (QMainWindow):
             mailno = item.data(Qt.UserRole)
             from_, subject, date, content = self.mailbox.get(mailno)
             self.mail_From.setText(from_)
-        except:
+        except Exception:
             QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to retriview the email.").exec_()
 
         try:
@@ -188,7 +188,7 @@ class MainWindow (QMainWindow):
             if date_tuple:
                 local_date = datetime.datetime.fromtimestamp(email.utils.mktime_tz(date_tuple))
                 _date = local_date.strftime("%a, %d %b %Y %H:%M:%S")
-        except: pass
+        except Exception: pass
         else: date = _date
 
         try:
@@ -196,7 +196,7 @@ class MainWindow (QMainWindow):
             _subject = subject
             for i in range(int(len(_subject) / 100)):
                 _subject = _subject[:i*100] + ' ' + _subject[i*100:]
-        except: pass
+        except Exception: pass
         else: subject = _subject
 
         self.mail_Subject.setText(subject)
