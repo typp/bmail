@@ -139,7 +139,9 @@ class MainWindow (QMainWindow):
             while self.mailList.count() > 0:
                 self.mailList.takeItem(0)
             for message in self.mailbox.list():
-                item = QListWidgetItem(message['header']['Subject'])
+                subject = message['header']['Subject']
+                subject = subject if isinstance(subject, str) else '<No subject>'
+                item = QListWidgetItem(subject)
                 self.mailList.addItem(item)
                 self.mailList.itemClicked.connect(partial(self.showMail, message['id']))
             if self.currentProfileAction:

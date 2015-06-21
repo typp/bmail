@@ -57,14 +57,13 @@ class MailboxPOP3:
 
     def decode (self, content):
         header = Parser.parsebytes(content)
-        # content = header.get_payload()[0].get_payload(decode=True)
         content = ''
         try:
             content = self.walk_and_decode(header, 'text/html')
             if not content:
                 content = self.walk_and_decode(header, 'text/plain')
         except:
-            return 'Cannot decode message'
+            return 'Cannot decode message.'
         else:
             return content
 
@@ -80,12 +79,14 @@ class MailboxPOP3:
     def sync (self):
         mail_list = self.connector.list()
         for mail_info in mail_list[1]:
-            mailno = int(mail_info.decode('ascii').split(' ')[0])
+            mailno = int(mail_info.decode('utf-8').split(' ')[0])
             mail = self.connector.retr(mailno)
             content = b'\n'.join(mail[1])
             header = Parser.parsebytes(content)
             filename = datetime.datetime.now().isoformat()
-            filename += re.sub(r"[^A-Za-z0-9-]", "-", header['Subject'])
+            subject = header['Subject'] if isinstance(header['Subject'], str) else '<No subject>'
+            filename += re.sub(r"[^A-Za-z0-9-]", "-", subject)
+            filename = filename[:92]
             filename += '.dat'
             path = os.path.join(self.storageDir, filename)
             with open(path, 'w') as stream:
