@@ -56,7 +56,7 @@ class MailboxPOP3:
         mailno = -1
         for path in files:
             data = self.read_local_mail(path)
-            self.local_mails.append({'id': mailno, 'content': data})
+            self.local_mails.append({'id': mailno, 'content': data, 'path': path})
             mailno -= 1
 
     def create_connection (self, profile, dialog):
@@ -129,7 +129,13 @@ class MailboxPOP3:
                 break
 
     def delete (self, mailno):
-        self.connector.dele(mailno)
+        if mailno < 0:
+            for mail in self.local_mails:
+                if mail['id'] == mailno:
+                    os.unlink(mail['path'])
+                    self.local_mails.remove(mail)
+        else:
+            self.connector.dele(mailno)
 
     def do_sync (self, dialog):
         mail_list = self.connector.list()
