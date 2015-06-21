@@ -25,4 +25,7 @@ class Dialog_NewMail (QDialog):
         self.buttonBox.accepted.connect(self.OK)
 
     def OK (self):
-        print (self.editor.getEditorHtml())
+        to = self.input_To.text()
+        subject = self.input_Subject.text()
+        content = self.editor.getEditorHtml()
+        self.parent.sendbox.send(to, subject, content)

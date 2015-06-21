@@ -30,6 +30,7 @@ class SendboxSMTP:
     connector = None
 
     def __init__(self, profile):
+        self.profile = profile
         self.config = profile['config']['sender']
         smtp = smtplib.SMTP_SSL if self.config['ssl'] else smtplib.SMTP
         self.connector = smtp(self.config['host'], self.config['port'])
@@ -53,7 +54,7 @@ class SendboxSMTP:
     def send(self, to, subject, html):
         mail = MIMEMultipart('alternative')
         mail['Subject'] = subject
-        mail['From'] = self.config['email']
+        mail['From'] = '{} <{}>'.format(self.profile['name'], self.profile['config']['email'])
         mail['To'] = to
 
         stripper = MLStripper()

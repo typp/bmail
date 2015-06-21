@@ -15,12 +15,19 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="input_To">
      <property name="text">
       <string/>
      </property>
      <property name="placeholderText">
-      <string extracomment="Subject"/>
+      <string extracomment="Subject">To</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="input_Subject">
+     <property name="placeholderText">
+      <string>Subject</string>
      </property>
     </widget>
    </item>

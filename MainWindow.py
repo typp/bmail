@@ -20,6 +20,7 @@ from Dialog_NewMail import *
 
 from MailboxPOP3 import *
 from MailboxIMAP import *
+from SendboxSMTP import *
 
 class MainWindow (QMainWindow):
     def __init__ (self):
@@ -34,6 +35,7 @@ class MainWindow (QMainWindow):
         self.currentProfile = None
         self.currentProfileAction = None
         self.mailbox = None
+        self.sendbox = None
         self.updateAllProfiles()
 
     def updateAllProfiles (self):
@@ -75,7 +77,6 @@ class MainWindow (QMainWindow):
                 used_ids.append(int(name.split('-')[0]))
             except:
                 pass
-        print(used_ids)
         while profile_id in used_ids:
             profile_id += 1
         return profile_id
@@ -127,6 +128,10 @@ class MainWindow (QMainWindow):
                 self.mailbox = MailboxPOP3(profile)
             elif profile['config']['receiver']['protocol'] == "IMAP":
                 self.mailbox = MailboxIMAP(profile)
+            else:
+                return
+            if profile['config']['sender']['protocol'] == "SMTP":
+                self.sendbox = SendboxSMTP(profile)
             else:
                 return
             self.mailbox.sync()
