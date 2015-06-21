@@ -106,11 +106,11 @@ class MailboxPOP3:
         for mail in self.local_mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
-                return header['From'], header['Subject'], self.decode(mail['content'])
+                return header['From'], header['Subject'], header['Date'], self.decode(mail['content'])
         for mail in self.mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
-                return header['From'], header['Subject'], self.decode(mail['content'])
+                return header['From'], header['Subject'], header['Date'], self.decode(mail['content'])
         return 'Mail is empty.'
 
     def sync (self):

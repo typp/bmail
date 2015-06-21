@@ -12,6 +12,7 @@ from functools import partial
 Parser = email.parser.BytesParser()
 
 class MailboxIMAP:
+
     def __init__ (self, profile):
         self.config = profile['config']['receiver']
         self.connector = None
@@ -70,7 +71,7 @@ class MailboxIMAP:
         rv, data = self.connector.fetch(str(mailno), '(RFC822)')
         if rv != 'OK': return None
         header = Parser.parsebytes(data[0][1])
-        return header['From'], header['Subject'], self.decode(data[0][1])
+        return header['From'], header['Subject'], header['Date'], self.decode(data[0][1])
 
     def sync (self):
         pass

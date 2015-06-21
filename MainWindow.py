@@ -35,6 +35,7 @@ class MainWindow (QMainWindow):
         self.action_New.triggered.connect(self.newProfileDialog)
         self.action_About.triggered.connect(self.aboutDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
+        self.answerButton.clicked.connect(self.answerMail)
         self.syncButton.clicked.connect(self.syncMailbox)
         self.deleteButton.clicked.connect(self.deleteMail)
         self.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
@@ -67,8 +68,8 @@ class MainWindow (QMainWindow):
         dialog = Dialog_About(self)
         dialog.exec()
 
-    def newMailDialog (self):
-        dialog = Dialog_NewMail(self)
+    def newMailDialog (self, **kwargs):
+        dialog = Dialog_NewMail(self, **kwargs)
         dialog.exec()
 
     def appendProfile (self, profile, filename):
@@ -166,10 +167,11 @@ class MainWindow (QMainWindow):
 
     def showMail (self, item):
         mailno = item.data(Qt.UserRole)
-        from_, subject, content = self.mailbox.get(mailno)
-        self.webView.setHtml(content)
+        from_, subject, date, content = self.mailbox.get(mailno)
         self.mail_From.setText(from_)
         self.mail_Subject.setText(subject)
+        self.mail_Date.setText(date)
+        self.webView.setHtml(content)
         self.currentMailNo = mailno
 
     def refreshMailList (self):
@@ -196,7 +198,22 @@ class MainWindow (QMainWindow):
     def deleteMail (self):
         if self.currentMailNo != None: # currentMailNo can be 0
             self.mailbox.delete(self.currentMailNo)
+
+            if self.mailList.currentRow() + 1 <= self.mailList.count():
+                next_row = self.mailList.currentRow()
+            elif self.mailList.currentRow() - 1 <= self.mailList.count():
+                next_row = self.mailList.currentRow() - 1
+            else:
+                next_row = 0
+
             self.mailList.takeItem(self.mailList.currentRow())
+            self.mailList.setCurrentRow(next_row)
+            self.showMail(self.mailList.currentItem())
+
+    def answerMail (self):
+        if self.sendbox and self.currentMailNo != None:
+            _from, subject, date, content = self.mailbox.get(self.currentMailNo)
+            dialog = self.newMailDialog(to=_from, subject='RE: ' + subject)
 
     def logout (self):
         if self.mailbox:

@@ -16,7 +16,7 @@ import ckeditor
 from Dialog_Loading import *
 
 class Dialog_NewMail (QDialog):
-    def __init__ (self, parent):
+    def __init__ (self, parent, to='', subject='', content=''):
         QDialog.__init__(self)
         dirname = os.path.dirname(os.path.abspath(__file__))
         uic.loadUi(os.path.join(dirname, "dialog_newmail.ui"), self)
@@ -27,6 +27,10 @@ class Dialog_NewMail (QDialog):
         self.editor.addEditor(os.path.join(dirname, "js/ckeditor/ckeditor.js"), editor='editor1')
 
         self.buttonBox.accepted.connect(self.OK)
+
+        self.input_To.setText(to)
+        self.input_Subject.setText(subject)
+        self.editor.setEditorHtml(content)
 
     def OK (self):
         to = self.input_To.text()
