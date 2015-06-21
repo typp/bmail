@@ -178,4 +178,3 @@ class MailboxPOP3:
         if self.connector:
             print("Closing connection.")
             self.connector.quit()
-

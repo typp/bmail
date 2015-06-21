@@ -49,7 +49,6 @@ class MainWindow (QMainWindow):
         self.currentMailNo = None
         self.updateAllProfiles()
 
-
     def updateAllProfiles (self):
         files = [os.path.join(self.profileDir, path)
                 for path
@@ -71,8 +70,11 @@ class MainWindow (QMainWindow):
         dialog.exec()
 
     def newMailDialog (self, **kwargs):
-        dialog = Dialog_NewMail(self, **kwargs)
-        dialog.exec()
+        if self.sendbox:
+            dialog = Dialog_NewMail(self, **kwargs)
+            dialog.exec()
+        else:
+            QMessageBox(QMessageBox.Critical, "Error", "You have update the Sender configuration to be able to send mails.").exec_()
 
     def appendProfile (self, profile, filename):
         self.action_No_profile_known.setVisible(False)
@@ -218,11 +220,15 @@ class MainWindow (QMainWindow):
             self.mailList.takeItem(self.mailList.currentRow())
             self.mailList.setCurrentRow(next_row)
             self.showMail(self.mailList.currentItem())
+        else:
+            QMessageBox(QMessageBox.Critical, "Error", "You have to select an email before.").exec_()
 
     def answerMail (self):
-        if self.sendbox and self.currentMailNo != None:
+        if self.currentMailNo != None:
             _from, subject, date, content = self.mailbox.get(self.currentMailNo)
             dialog = self.newMailDialog(to=_from, subject='RE: ' + subject)
+        else:
+            QMessageBox(QMessageBox.Critical, "Error", "You have to select an email before.").exec_()
 
     def logout (self):
         if self.mailbox:

@@ -14,10 +14,10 @@ class Dialog_About (QDialog):
         QDialog.__init__(self)
         self.parent = parent
         dirname = os.path.dirname(os.path.abspath(__file__))
-        uic.loadUi(os.path.join(dirname, "about.ui"), self)
+        uic.loadUi(os.path.join(dirname, "dialog_about.ui"), self)
         self.scene = QtWidgets.QGraphicsScene()
         self.view = QtWidgets.QGraphicsView(self.scene)
-        self.item = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap("lolbmail.png"))
+        self.item = QtWidgets.QGraphicsPixmapItem(QtGui.QPixmap("about.png"))
         self.scene.addItem(self.item);
         self.horizontalLayout.addWidget(self.view)
         self.view.show()
