@@ -4,6 +4,7 @@ import sys
 import os
 import re
 import yaml
+import webbrowser
 
 from functools import partial
 
@@ -14,6 +15,7 @@ from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 from PyQt5 import uic
 from PyQt5 import QtGui
+from PyQt5.QtWebKitWidgets import QWebPage
 
 from Dialog_NewProfile import *
 from Dialog_NewMail import *
@@ -31,6 +33,10 @@ class MainWindow (QMainWindow):
         self.action_New.triggered.connect(self.newProfileDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
         self.syncButton.clicked.connect(self.syncMailbox)
+
+        self.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
+        self.webView.linkClicked.connect(self.openLinkInBrowser)
+
         self.profileDir = 'profile'
         self.currentProfile = None
         self.currentProfileAction = None
@@ -150,6 +156,8 @@ class MainWindow (QMainWindow):
         mailno = item.data(Qt.UserRole)
         content = self.mailbox.get(mailno)
         self.webView.setHtml(content)
+        self.mail_From.setText("une certaine personne!")
+        self.mail_Subject.setText("osef du sujet!")
 
     def refreshMailList (self):
         while self.mailList.count() > 0:
@@ -165,3 +173,6 @@ class MainWindow (QMainWindow):
     def syncMailbox (self):
         self.mailbox.sync()
         self.refreshMailList()
+
+    def openLinkInBrowser(self, url):
+        webbrowser.open(url.toString())
