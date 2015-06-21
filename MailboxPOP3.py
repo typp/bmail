@@ -1,14 +1,11 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-import getpass
 import poplib
-import email.parser
-from email.header import decode_header
 import re
 import datetime
 import email
+from email.header import decode_header
 import quopri
 import threading
 from time import sleep

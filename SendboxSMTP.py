@@ -68,7 +68,7 @@ class SendboxSMTP:
     def send(self, to, subject, html):
         mail = MIMEMultipart('alternative')
         mail['Subject'] = subject
-        mail['From'] = '{} <{}>'.format(self.profile['name'], self.profile['config']['email'])
+        mail['From'] = '{} <{}>'.format(self.profile['config']['realName'], self.profile['config']['email'])
         mail['To'] = to
 
         stripper = MLStripper()

@@ -5,6 +5,7 @@ import os
 import threading
 from functools import partial
 
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
@@ -26,16 +27,18 @@ class Dialog_NewMail (QDialog):
         self.layout.layout().addWidget(self.editor, 0, Qt.AlignCenter)
         self.editor.addEditor(os.path.join(dirname, "js/ckeditor/ckeditor.js"), editor='editor1')
 
-        self.buttonBox.accepted.connect(self.OK)
-
         self.input_To.setText(to)
         self.input_Subject.setText(subject)
         self.editor.setEditorHtml(content)
 
-    def OK (self):
-        to = self.input_To.text()
-        subject = self.input_Subject.text()
-        content = self.editor.getEditorHtml()
+    def accept (self):
+        if not self.input_To.text().strip():
+            QMessageBox(QMessageBox.Critical, "Error", "You have to specify a recipient.").exec_()
+            return
+
+        to = self.input_To.text().strip()
+        subject = self.input_Subject.text().strip()
+        content = self.editor.getEditorHtml().strip()
 
         dialog = Dialog_Loading(self)
         dialog.message.setText("Sending e-mail ...")
@@ -51,3 +54,4 @@ class Dialog_NewMail (QDialog):
             else:
                 dialog.hide()
                 break
+        self.close()

@@ -250,6 +250,12 @@ class MainWindow (QMainWindow):
             QMessageBox(QMessageBox.Critical, "Error", "You have to select an email before.").exec_()
 
     def logout (self):
+        self.mail_From.setText('')
+        self.mail_Subject.setText('')
+        self.mail_Date.setText('')
+        self.webView.setHtml('')
+        self.currentMailNo = None
+
         if self.mailbox:
             self.mailbox.logout()
             self.mailbox = None

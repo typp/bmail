@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>411</width>
-    <height>605</height>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,33 +15,30 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
+    <widget class="QLineEdit" name="input_ProfileName">
+     <property name="placeholderText">
       <string>Profile Name</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QLineEdit" name="input_ProfileName"/>
-      </item>
-     </layout>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Email Address</string>
+    <widget class="QLineEdit" name="input_RealName">
+     <property name="placeholderText">
+      <string>Real Name (sent to recipients)</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLineEdit" name="input_EmailAddress"/>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="input_EmailAddress">
+     <property name="placeholderText">
+      <string>E-mail Address</string>
+     </property>
     </widget>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_receive">
       <attribute name="title">
@@ -79,7 +76,7 @@
                <number>65535</number>
               </property>
               <property name="value">
-               <number>110</number>
+               <number>993</number>
               </property>
              </widget>
             </item>
@@ -210,7 +207,7 @@
                <number>65535</number>
               </property>
               <property name="value">
-               <number>110</number>
+               <number>465</number>
               </property>
              </widget>
             </item>
@@ -223,8 +220,14 @@
               <property name="text">
                <string>SMTP</string>
               </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
               <property name="checked">
                <bool>true</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
