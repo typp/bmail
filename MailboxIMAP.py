@@ -39,8 +39,7 @@ class MailboxIMAP:
         try:
             self.connector = imap(self.config['host'], self.config['port'])
         except:
-            alert = QMessageBox(QMessageBox.Critical, "Error",
-                                "Could not connect to %s." % self.config["host"])
+            pass
         else:
             print("Logging in ...")
             dialog.message.setText("Logging in ...")

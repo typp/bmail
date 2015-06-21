@@ -72,8 +72,7 @@ class MailboxPOP3:
         try:
             self.connector = pop3(self.config['host'], self.config['port'])
         except:
-            alert = QMessageBox(QMessageBox.Critical, "Error",
-                "Could not connect to %s." % self.config["host"])
+            pass
         else:
             print("Logging in ...")
             dialog.message.setText("Logging in ...")

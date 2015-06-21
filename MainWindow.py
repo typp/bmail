@@ -147,7 +147,7 @@ class MainWindow (QMainWindow):
                 self.mailbox.sync()
                 self.refreshMailList()
             except Exception:
-                QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to join the servers.")
+                QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to join the servers.").exec_()
             if self.currentProfileAction:
                 font = QtGui.QFont()
                 font.setBold(False)
@@ -178,8 +178,11 @@ class MainWindow (QMainWindow):
         self.mailList.itemClicked.connect(self.showMail)
 
     def syncMailbox (self):
-        self.mailbox.sync()
-        self.refreshMailList()
+        try:
+            self.mailbox.sync()
+            self.refreshMailList()
+        except Exception:
+            QMessageBox(QMessageBox.Critical, "Error", "Failure while trying to join the servers.").exec_()
 
     def openLinkInBrowser(self, url):
         webbrowser.open(url.toString())
