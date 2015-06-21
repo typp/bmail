@@ -84,7 +84,6 @@ class MailboxPOP3:
 
     def get (self, mailno):
         content = None
-        print(mailno)
         for mail in self.mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
