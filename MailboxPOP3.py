@@ -8,8 +8,12 @@ import re
 import datetime
 import email
 import quopri
+import threading
+from time import sleep
 
 from Dialog_Loading import *
+from PyQt5.QtWidgets import QMessageBox
+from functools import partial
 
 Parser = email.parser.BytesParser()
 
@@ -20,16 +24,27 @@ class MailboxPOP3:
         self.storageDir = None
         self.mails = []
         self.connector = None
-        self.create_connection(profile)
+        self.dialog = None
+        self.dialog = Dialog_Loading(self)
+        self.dialog.show()
+        thr = threading.Thread(target=partial(self.create_connection, profile, self.dialog))
+        thr.start()
+        while True:
+            thr.join(0.1)
+            if thr.is_alive():
+                QtWidgets.QApplication.processEvents()
+                self.dialog.repaint()
+                self.dialog.update()
+            else:
+                self.dialog.hide()
+                break
 
-    def create_connection (self, profile):
-        dialog = Dialog_Loading(self)
-        dialog.show()
+    def create_connection (self, profile, dialog):
         pop3 = poplib.POP3_SSL if self.config['ssl'] else poplib.POP3
         safe_name = re.sub(r"[^A-Za-z0-9-]", "-", profile['name'])
         self.storageDir = os.path.join(
-                'storage',
-                '%i-%s' % (profile['id'], safe_name))
+            'storage',
+            '%i-%s' % (profile['id'], safe_name))
         try:
             os.mkdir(self.storageDir)
         except FileExistsError:
@@ -44,7 +59,6 @@ class MailboxPOP3:
             dialog.message.setText("Logging in ...")
             self.connector.user(self.config['username'])
             self.connector.pass_(self.config['password'])
-            dialog.hide()
 
     def walk_and_decode (self, header, content_type):
         content = ''
@@ -77,7 +91,23 @@ class MailboxPOP3:
         return 'Mail is empty.'
 
     def sync (self):
+        self.dialog = Dialog_Loading(self)
+        self.dialog.show()
+        thr = threading.Thread(target=partial(self.do_sync, self.dialog))
+        thr.start()
+        while True:
+            thr.join(0.1)
+            if thr.is_alive():
+                QtWidgets.QApplication.processEvents()
+                self.dialog.repaint()
+                self.dialog.update()
+            else:
+                self.dialog.hide()
+                break
+
+    def do_sync (self, dialog):
         mail_list = self.connector.list()
+        dialog.message.setText("Retrieving messages ...")
         for mail_info in mail_list[1]:
             mailno = int(mail_info.decode('utf-8').split(' ')[0])
             mail = self.connector.retr(mailno)
