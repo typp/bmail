@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from PyQt5.QtWidgets import QMessageBox
+
 import smtplib
 
 from email.mime.multipart import MIMEMultipart
@@ -79,5 +81,8 @@ class SendboxSMTP:
         try:
             self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
         except smtplib.SMTPServerDisconnected:
-            self.reconnect()
-            self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
+            try:
+                self.reconnect()
+                self.connector.sendmail(mail['From'], mail['To'], mail.as_string())
+            except:
+                QMessageBox(QMessageBox.Critical, "Error", "Could not connect to SMTP server.")

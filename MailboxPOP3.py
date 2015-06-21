@@ -24,6 +24,7 @@ class MailboxPOP3:
         self.config = profile['config']['receiver']
         self.storageDir = None
         self.mails = []
+        self.local_mails = []
         self.connector = None
         self.dialog = None
         self.dialog = Dialog_Loading(self)
@@ -55,7 +56,7 @@ class MailboxPOP3:
         mailno = -1
         for path in files:
             data = self.read_local_mail(path)
-            self.mails.append({'id': mailno, 'content': data})
+            self.local_mails.append({'id': mailno, 'content': data})
             mailno -= 1
 
     def create_connection (self, profile, dialog):
@@ -103,6 +104,10 @@ class MailboxPOP3:
 
     def get (self, mailno):
         content = None
+        for mail in self.local_mails:
+            if mail['id'] == mailno:
+                header = Parser.parsebytes(mail['content'])
+                return header['From'], header['Subject'], self.decode(mail['content'])
         for mail in self.mails:
             if mail['id'] == mailno:
                 header = Parser.parsebytes(mail['content'])
@@ -130,6 +135,8 @@ class MailboxPOP3:
     def do_sync (self, dialog):
         mail_list = self.connector.list()
         dialog.message.setText("Retrieving messages ...")
+        print(mail_list[0].decode('utf-8'))
+        self.mails = []
         for mail_info in mail_list[1]:
             mailno = int(mail_info.decode('utf-8').split(' ')[0])
             mail = self.connector.retr(mailno)
@@ -147,6 +154,9 @@ class MailboxPOP3:
 
     def list (self):
         res = []
+        for mail in self.local_mails:
+            header = Parser.parsebytes(mail['content'])
+            res.append({'id': mail['id'], 'header': header})
         for mail in self.mails:
             header = Parser.parsebytes(mail['content'])
             res.append({'id': mail['id'], 'header': header})
