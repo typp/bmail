@@ -199,9 +199,12 @@ class MainWindow (QMainWindow):
         except Exception: pass
         else: subject = _subject
 
-        self.mail_Subject.setText(subject)
-        self.mail_Date.setText(date)
-        self.webView.setHtml(content)
+        try: self.mail_Subject.setText(subject)
+        except Exception: pass
+        try: self.mail_Date.setText(date)
+        except Exception: pass
+        try: self.webView.setHtml(content)
+        except Exception: pass
         self.currentMailNo = mailno
 
     def refreshMailList (self):

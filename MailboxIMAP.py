@@ -73,7 +73,9 @@ class MailboxIMAP:
         try:
             content = self.walk_and_decode(header, 'text/html')
             if not content:
+                bootstrap = '<html><head><style>body{background-color:#ffffff;}</style></head><body>%s</body></html>'
                 content = self.walk_and_decode(header, 'text/plain')
+                content = bootstrap % content.replace('\n', '<br />')
         except Exception:
             return 'Cannot decode message'
         else:
