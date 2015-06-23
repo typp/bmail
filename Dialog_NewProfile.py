@@ -32,6 +32,7 @@ class Dialog_NewProfile (QDialog):
 
     def load (self, profile):
         self.input_ProfileName.setText(profile['name'])
+        self.input_ProfileName.setEnabled(False)
         self.input_EmailAddress.setText(profile['config']['email'])
         self.input_RealName.setText(profile['config']['realName'])
 
