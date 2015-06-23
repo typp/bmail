@@ -256,7 +256,7 @@
      <x>0</x>
      <y>0</y>
      <width>1108</width>
-     <height>26</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuProfile">
@@ -264,6 +264,7 @@
      <string>&amp;Profile</string>
     </property>
     <addaction name="action_New"/>
+    <addaction name="action_Edit"/>
     <addaction name="separator"/>
     <addaction name="action_No_profile_known"/>
    </widget>
@@ -313,6 +314,14 @@
   <action name="action_Exit">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_Edit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Edit ...</string>
    </property>
   </action>
  </widget>

@@ -35,6 +35,7 @@ class MainWindow (QMainWindow):
         uic.loadUi(os.path.join(dirname, "mainwindow.ui"), self)
         self.profiles = []
         self.action_New.triggered.connect(self.newProfileDialog)
+        self.action_Edit.triggered.connect(self.editProfile)
         self.action_Exit.triggered.connect(self.close)
         self.action_About.triggered.connect(self.aboutDialog)
         self.newMailButton.clicked.connect(self.newMailDialog)
@@ -109,7 +110,7 @@ class MainWindow (QMainWindow):
             self.profileDir,
             "%03d-%s.yaml" % (profile_id, safe_name))
 
-    def registerProfile (self, name, config):
+    def registerProfile (self, name, config, edit_id = None):
         """
         config.receiver.host: string
         config.receiver.port: integer
@@ -132,7 +133,7 @@ class MainWindow (QMainWindow):
         config.email: string
         """
 
-        profile_id = self.getProfileID()
+        profile_id = self.getProfileID() if not edit_id else edit_id
         filename = self.getProfileFile(profile_id, name)
         profile = {
             'id': profile_id,
@@ -143,6 +144,11 @@ class MainWindow (QMainWindow):
             stream.write(yaml.dump(profile))
         action = self.appendProfile(profile, filename)
         self.selectProfile(action, profile)
+
+    def editProfile (self):
+        dialog = Dialog_NewProfile(self)
+        dialog.load(self.currentProfile)
+        dialog.exec()
 
     def connectToServers (self, profile):
         recv = profile['config']['receiver']['protocol']
@@ -168,6 +174,7 @@ class MainWindow (QMainWindow):
                 font.setBold(False)
                 self.currentProfileAction.setFont(font)
             self.currentProfileAction = action
+            self.action_Edit.setEnabled(True)
             font = QtGui.QFont()
             font.setBold(True)
             self.currentProfileAction.setFont(font)

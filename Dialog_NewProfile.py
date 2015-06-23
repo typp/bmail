@@ -16,7 +16,7 @@ class Dialog_NewProfile (QDialog):
         uic.loadUi(os.path.join(dirname, "dialog_newprofile.ui"), self)
         self.parent = parent
         self.autoPortSelection = True
-
+        self.edit_id = False
         self.input_sender_checkbox_Authentificate.stateChanged.connect(self.toggleSenderAuthentification)
         self.input_sender_checkbox_ReuseReceiverCreds.stateChanged.connect(self.toggleSenderReuseReceiverCreds)
         self.input_sender_checkbox_SSL.stateChanged.connect(self.toggleSenderSSLTLS)
@@ -29,6 +29,32 @@ class Dialog_NewProfile (QDialog):
         self.input_receiver_Port.valueChanged.connect(self.toggleAutoPortSelection)
         self.input_sender_Port.valueChanged.connect(self.toggleAutoPortSelection)
         self.input_sender_radio_SMTP.toggled.connect(self.fixSMTPCheckbox)
+
+    def load (self, profile):
+        self.input_ProfileName.setText(profile['name'])
+        self.input_EmailAddress.setText(profile['config']['email'])
+        self.input_RealName.setText(profile['config']['realName'])
+
+        self.input_sender_Host.setText(profile['config']['sender']['host'])
+        self.input_sender_Port.setValue(profile['config']['sender']['port'])
+        self.input_sender_radio_SMTP.setChecked(profile['config']['sender']['protocol'] == 'SMTP')
+        self.input_sender_checkbox_Authentificate.setChecked(profile['config']['sender']['auth']),
+        self.input_sender_Username.setText(profile['config']['sender']['username'])
+        self.input_sender_Password.setText(profile['config']['sender']['password'])
+        self.input_sender_checkbox_RememberPass.setChecked(profile['config']['sender']['passRemember'])
+        self.input_sender_checkbox_SSL.setChecked(profile['config']['sender']['ssl'])
+        self.input_sender_checkbox_TLS.setChecked(profile['config']['sender']['tls'])
+
+        self.input_receiver_Host.setText(profile['config']['receiver']['host'])
+        self.input_receiver_Port.setValue(profile['config']['receiver']['port'])
+        self.input_receiver_radio_POP3.setChecked(profile['config']['receiver']['protocol'] == 'POP3')
+        self.input_receiver_radio_IMAP.setChecked(profile['config']['receiver']['protocol'] == 'POP3')
+        self.input_receiver_Username.setText(profile['config']['receiver']['username'])
+        self.input_receiver_Password.setText(profile['config']['receiver']['password'])
+        self.input_receiver_checkbox_RememberPass.setChecked(profile['config']['receiver']['passRemember'])
+        self.input_receiver_checkbox_SSL.setChecked(profile['config']['receiver']['ssl'])
+
+        self.edit_id = profile['id']
 
     def fixSMTPCheckbox (self, state):
         self.input_sender_radio_SMTP.setChecked(True)
@@ -109,4 +135,4 @@ class Dialog_NewProfile (QDialog):
             },
             'email': self.input_EmailAddress.text().strip(),
             'realName': self.input_RealName.text().strip() if self.input_RealName.text().strip() else ''
-        })
+        }, self.edit_id)
